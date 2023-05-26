@@ -89,3 +89,11 @@ def remove_bucket(bucket):
 def display_bucket_items(bucket):
     res =  subprocess.check_output(["./gnfd-cmd", "object", "ls", "gnfd://"+bucket])
     return res.decode()
+
+def upload_flean_file(bucket, file):
+    res =  subprocess.check_output(["./gnfd-cmd", "object", "put", file,  "gnfd://"+bucket+"/"+file])
+    return res.decode()
+
+def rem_flean_file(bucket, file):
+    res =  subprocess.check_output(["./gnfd-cmd", "object", "delete", "gnfd://"+bucket+"/"+file])
+    return res.decode()

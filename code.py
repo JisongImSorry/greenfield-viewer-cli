@@ -8,17 +8,20 @@ import inquirer
 def main():
     parser = argparse.ArgumentParser(description='Your CLI Tool Description')
 
+    # Config Operation
     parser.add_argument('-v', '--version', action='store_true', help='Display the version of this program')
     parser.add_argument('-hi', '--hello', action='store_true', help='List all my buckets')
 
+    # Display Operation
     parser.add_argument('-ls', '--list', help='List items. Supported: bucket, sp')
     parser.add_argument('-mkbkt', '--makebucket', help='Create a greenfield bucket')
     parser.add_argument('-rmbkt', '--removebucket', help='Remove a greenfield bucket')
-
     parser.add_argument('-show', '--showfiles', help='List bucket files')
 
-    parser.add_argument('-mkf', '--makefile', help='Specify a file and add it')
-    parser.add_argument('-rmf', '--removefile', help='Specify a file and delete it')
+    # FILE Operation
+    parser.add_argument('-u', '--updatefile', help='Add file to bucket')
+    parser.add_argument('-rm', '--removefile', help='Remove file to bucket')
+
     parser.add_argument('-key', '--keystore', action='store_true', help='Create keystore')
 
     # Add more arguments as needed
@@ -42,6 +45,12 @@ def main():
         grfd.check_grfd_credential()
     if args.hello:
         print("Hello, world!!")
+    if args.updatefile:
+        inputbucket = input("bucket : ")
+        print(grfd.upload_flean_file(inputbucket, args.updatefile))
+    if args.removefile:
+        inputbucket = input("bucket : ")
+        print(grfd.rem_flean_file(inputbucket, args.removefile))
     
     #gnfd-cmd bucket create gnfd://gnfd-bucket
 
