@@ -81,3 +81,11 @@ def cancel_create_object(bucket, object):
     except:
         print("Error canceling create object.")
         return -1
+
+def remove_bucket(bucket):
+    res =  subprocess.check_output(["./gnfd-cmd", "bucket", "delete", "gnfd://"+bucket])
+    return res.decode()
+
+def display_bucket_items(bucket):
+    res =  subprocess.check_output(["./gnfd-cmd", "object", "ls", "gnfd://"+bucket])
+    return res.decode()

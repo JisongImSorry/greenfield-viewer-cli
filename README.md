@@ -6,6 +6,88 @@ greenfield-viewer-cli helps you to use BNB-Greenfield
 
 [Documentation](https://coo-cooing.gitbook.io/greenfield-viewer-cli/)
 
+# Commands
+
+## Display the version of this program
+
+```bash
+python code.py -v
+```
+
+## Display the version of this program
+
+```bash
+python code.py -v
+```
+
+This command will display the version of the program when executed.
+
+You can follow a similar format to document the other command-line arguments:
+
+## List all my buckets
+
+```bash
+python code.py -hi
+```
+
+This command will list all the buckets associated with the program.
+
+## List items. Supported: bucket, sp
+
+```bash
+python code.py -ls bucket
+```
+
+This command will list the available buckets.
+
+## Create a greenfield bucket
+
+```bash
+python code.py -mkbkt <bucket_name>
+```
+
+This command will create a new greenfield bucket with the specified name.
+
+## Remove a greenfield bucket
+
+```bash
+python code.py -rmbkt <bucket_name>
+```
+
+This command will remove the specified greenfield bucket.
+
+## List bucket files
+
+```bash
+python code.py -show <bucket_name>
+```
+
+This command will list the files in the specified bucket.
+
+## Specify a file and add it
+
+```bash
+python code.py -mkf <file_path>
+```
+
+This command will add the specified file to the program.
+
+## Specify a file and delete it
+
+```bash
+python code.py -rmf <file_path>
+```
+
+This command will delete the specified file from the program.
+
+## Create keystore
+
+```bash
+python code.py -key
+```
+
+This command will create a keystore.
+
 # Prerequisite
 
 Python 3.X
