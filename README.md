@@ -4,7 +4,7 @@ greenfield-viewer-cli helps you to use BNB-Greenfield
 
 # Documentation
 
-[Documentation](https://coo-cooing.gitbook.io/greenfield-viewer-cli/)
+[Documentation]()
 
 # Commands
 
