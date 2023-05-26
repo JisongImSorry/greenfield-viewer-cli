@@ -1,99 +1,58 @@
-import subprocess
+#!/usr/bin/env python
+
+import argparse
+import grfd
 import inquirer
-import os
-import re
 
-def upload_file(bucket, object, contentType):
-    try:
-        bucket = "gnfd://" + bucket
-        object_location = "tmp/" + object
-        print("Uploading file " + object + " to " + bucket)
-        print(bucket + "/" + object)
-        uploadRes = subprocess.check_output(["./gnfd-cmd", "storage", "put", "--contentType", contentType, object_location, bucket + "/" + object])
-        if "error" in uploadRes.decode():
-            print(uploadRes.decode())
-            print("Error creating bucket. Please try again with another name.")
-            return -1
-        else:
-            print("Upload " + object + " to " + bucket + " complete!")
-            return 0
-    except:
-        print("Error uploading file. Please try again.")
-        return -1
 
-def create_grfd_bucket(bucket):
-    createBucketRes = subprocess.check_output(["./gnfd-cmd", "bucket", "create", "gnfd://"+bucket])
-    if "error" in createBucketRes.decode():
-        print(createBucketRes.decode())
-        print("Error creating bucket. Please try again with another name.")
-        return -1
-    else:
-        print("Bucket created!")
-        return 0
+def main():
+    parser = argparse.ArgumentParser(description='Your CLI Tool Description')
+
+    # Config Operation
+    parser.add_argument('-v', '--version', action='store_true', help='Display the version of this program')
+    parser.add_argument('-hi', '--hello', action='store_true', help='List all my buckets')
+
+    # Display Operation
+    parser.add_argument('-ls', '--list', help='List items. Supported: bucket, sp')
+    parser.add_argument('-mkbkt', '--makebucket', help='Create a greenfield bucket')
+    parser.add_argument('-rmbkt', '--removebucket', help='Remove a greenfield bucket')
+    parser.add_argument('-show', '--showfiles', help='List bucket files')
+
+    # FILE Operation
+    parser.add_argument('-u', '--updatefile', help='Add file to bucket')
+    parser.add_argument('-rm', '--removefile', help='Remove file to bucket')
+
+    parser.add_argument('-key', '--keystore', action='store_true', help='Create keystore')
+
+    # Add more arguments as needed
+    args = parser.parse_args()
     
-def get_service_providers():
-    print("Getting service providers...")
+    # Access the values of the arguments
+    if args.makebucket:
+        grfd.create_grfd_bucket(args.makebucket)
+    if args.removebucket:
+        print(grfd.remove_bucket(args.removebucket))
+    if args.showfiles:
+        print(grfd.display_bucket_items(args.showfiles))
+    if args.version:
+        print("v0.9.1")
+    if args.list:
+        if args.list == "bucket":
+            print(grfd.list_buckets())
+        if args.list == "sp":
+            print(grfd.get_service_providers())
+    if args.keystore:
+        grfd.check_grfd_credential()
+    if args.hello:
+        print("Hello, world!!")
+    if args.updatefile:
+        inputbucket = input("bucket : ")
+        print(grfd.upload_flean_file(inputbucket, args.updatefile))
+    if args.removefile:
+        inputbucket = input("bucket : ")
+        print(grfd.rem_flean_file(inputbucket, args.removefile))
+    
+    #gnfd-cmd bucket create gnfd://gnfd-bucket
 
-    serviceProviders = subprocess.check_output(["./gnfd-cmd", "bucket", "ls"])
-    serviceProviderString=serviceProviders.decode()
-
-    return serviceProviderString
-
-def list_buckets():
-    buckets = subprocess.check_output(["./gnfd-cmd", "bucket", "ls"])
-    bucketsString=buckets.decode()
-
-    return bucketsString 
-
-def check_grfd_credential():
-    file_path = './key.json'  
-
-    if os.path.exists(file_path):
-        # Credentials exist
-        print("Credentials exist!")
-    else:
-        # Credentials do not exist. Make a new one
-        print("Credentials do not exist!")
-        print("Making new credentials to access to GNFD...")
-        
-        questions = [
-        inquirer.Text('privKey', message="Please provide your BNB Greenfield Private Key"),
-        ]
-        answers = inquirer.prompt(questions)
-        userPrivKey = answers['privKey']
-
-        with open('key.txt', 'w') as f:
-            f.write(userPrivKey)
-
-        result = subprocess.call(["./gnfd-cmd", "gen-key", "-privKeyFile", "key.txt", "key.json"])
-        print("Credentials created!")
-
-def cancel_create_object(bucket, object):
-    print("Canceling create object...")
-    try:
-        cancelRes = subprocess.check_output(["./gnfd-cmd", "storage", "cancel-create-obj", bucket + "/" + object])
-        if "error" in cancelRes.decode():
-            print(cancelRes.decode())
-            return -1
-        else:
-            print("Cancel " + object + " to " + bucket + " complete!")
-            return 0
-    except:
-        print("Error canceling create object.")
-        return -1
-
-def remove_bucket(bucket):
-    res =  subprocess.check_output(["./gnfd-cmd", "bucket", "delete", "gnfd://"+bucket])
-    return res.decode()
-
-def display_bucket_items(bucket):
-    res =  subprocess.check_output(["./gnfd-cmd", "object", "ls", "gnfd://"+bucket])
-    return res.decode()
-
-def upload_flean_file(bucket, file):
-    res =  subprocess.check_output(["./gnfd-cmd", "object", "put", file,  "gnfd://"+bucket+"/"+file])
-    return res.decode()
-
-def rem_flean_file(bucket, file):
-    res =  subprocess.check_output(["./gnfd-cmd", "object", "delete", "gnfd://"+bucket+"/"+file])
-    return res.decode()
+if __name__ == '__main__':
+    main()
